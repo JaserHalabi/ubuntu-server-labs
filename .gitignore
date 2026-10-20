@@ -1,0 +1,28 @@
+# Ubuntu Server & General GitIgnore
+*.log
+*.tmp
+*.bak
+*.swp
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+.directory
+
+# Virtualization / Disk Images
+*.iso
+*.vhdx
+*.vhd
+*.vmdk
+*.ova
+*.ovf
+
+# Sensitive credentials
+*.pem
+*.key
+id_rsa
+id_ed25519
+!id_ed25519.pub
+known_hosts
