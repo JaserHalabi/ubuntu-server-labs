@@ -213,35 +213,6 @@ jaser@ubuntu:~$
 
 ---
 
-## 🔒 Security Hardening Recommendations
-
-To achieve full enterprise-grade production compliance, the following additional configurations should be applied to `/etc/ssh/sshd_config` or `/etc/ssh/sshd_config.d/99-hardened.conf`:
-
-```bash
-# 1. Disable root login across the network
-PermitRootLogin no
-
-# 2. Enforce strict public-key-only authentication
-PasswordAuthentication no
-KbdInteractiveAuthentication no
-
-# 3. Restrict allowed login accounts
-AllowUsers jaser
-
-# 4. Limit authentication attempts and session timeouts
-MaxAuthTries 3
-ClientAliveInterval 300
-ClientAliveCountMax 2
-
-# 5. Enable firewall protection using UFW
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw allow 22/tcp comment 'Allow OpenSSH'
-sudo ufw enable
-```
-
----
-
 ## 📊 Verification Matrix
 
 | Verification Check | Target / Command | Expected Result | Outcome |

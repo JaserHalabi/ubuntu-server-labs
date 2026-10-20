@@ -1,21 +1,20 @@
 # Ubuntu Server Deployment & Systems Administration Portfolio
-### Enterprise Linux Infrastructure, Service Automation & Security Hardening
+### Hands-on Ubuntu Server Deployment, Administration & Remote Management
 
-[![Platform](https://img.shields.io/badge/Platform-Ubuntu%20Server%2024.04%20LTS-E95420?style=flat-square&logo=ubuntu&logoColor=white)](https://ubuntu.com/download/server)
-[![Security](https://img.shields.io/badge/Security-OpenSSH%20%7C%20ED25519-informational?style=flat-square&logo=openssh&logoColor=white)](#)
-[![Focus](https://img.shields.io/badge/Focus-System%20Administration%20%26%20Hardening-blue?style=flat-square)](#-overview)
-[![Labs Completed](https://img.shields.io/badge/Labs%20Completed-1%20Documented-success?style=flat-square)](#-lab-modules-index)
+[![Platform](https://img.shields.io/badge/Platform-Ubuntu%20Server-E95420?style=flat-square&logo=ubuntu&logoColor=white)](https://ubuntu.com/download/server)
+[![Security](https://img.shields.io/badge/Authentication-ED25519%20Key--Based-informational?style=flat-square&logo=openssh&logoColor=white)](#)
+[![Labs](https://img.shields.io/badge/Labs-1%20Documented-success?style=flat-square)](#-lab-modules-index)
 [![Author](https://img.shields.io/badge/Author-Jaser%20Halabi-lightgrey?style=flat-square&logo=github)](https://github.com/JaserHalabi)
 
-> A practical, hands-on portfolio documenting Linux systems administration, enterprise server deployment, network service orchestration, and security hardening on **Ubuntu Server**.
+> A practical portfolio documenting hands-on systems administration, user management, and secure remote access on **Ubuntu Server**.
 
 ---
 
 ## 📖 Overview
 
-This repository contains end-to-end documentation, technical write-ups, and verified configurations executed across **Ubuntu Server** instances in a virtualized enterprise homelab environment.
+This repository documents hands-on configurations and lab exercises performed on **Ubuntu Server**.
 
-Each module focuses on practical system administration tasks—from initial operating system provisioning, network discovery, and remote access security, to service daemon orchestration and access control. Every lab write-up includes step-by-step terminal execution, architecture diagrams, verification checks, and raw visual evidence.
+Each lab includes step-by-step procedures, terminal commands, outputs, network architecture, and visual evidence captured during execution.
 
 ---
 
@@ -23,21 +22,21 @@ Each module focuses on practical system administration tasks—from initial oper
 
 ```mermaid
 flowchart TB
-    subgraph Management["🖥️ Administrative Workstation (Windows 11)"]
+    subgraph Client["🖥️ Client Workstation (Windows 11)"]
         direction TB
-        Client["Host IP: 192.168.150.1<br/>OpenSSH Client<br/>ED25519 Key Pair (~/.ssh/id_ed25519)<br/>known_hosts Registry"]
+        C_HOST["Host IP: 192.168.150.1<br/>OpenSSH Client<br/>ED25519 Key: ~/.ssh/id_ed25519<br/>Host Registry: known_hosts"]
     end
 
-    subgraph Network["🌐 Virtual Subnet (192.168.150.0/24)"]
+    subgraph Network["🌐 Local Subnet (192.168.150.0/24)"]
         direction TB
-        Switch["Virtual Switch / NAT Gateway<br/>Broadcast: 192.168.150.255"]
+        Switch["Virtual Switch / Subnet Gateway<br/>Broadcast: 192.168.150.255"]
     end
 
-    subgraph Server["🐧 Production Ubuntu Server"]
+    subgraph Server["🐧 Ubuntu Server"]
         direction TB
-        NIC["Interface: ens33<br/>Static/Dynamic IP: 192.168.150.134/24<br/>MAC: 00:0c:29:71:be:ff"]
-        Auth["Identity & Access<br/>Account: jaser (UID 1002)<br/>Public Key: ~/.ssh/authorized_keys"]
-        Daemon["System Services<br/>ssh.service (PID 6034)<br/>Listening: 0.0.0.0:22 & :::22<br/>Socket: ssh.socket"]
+        NIC["Interface: ens33<br/>IP: 192.168.150.134/24<br/>MAC: 00:0c:29:71:be:ff"]
+        Auth["User Account: jaser (UID 1002)<br/>Public Key Authentication"]
+        Daemon["ssh.service (PID 6034)<br/>Listening on 0.0.0.0:22 & :::22<br/>Socket: ssh.socket"]
         NIC --> Daemon
         Daemon --> Auth
     end
@@ -50,73 +49,58 @@ flowchart TB
 
 ## 📑 Lab Modules Index
 
-Click on a module below to view the dedicated write-up, procedures, commands, and screenshots:
-
 | # | Lab Module | Key Topics & Competencies | Status | Documentation |
 |:---:|---|---|:---:|:---:|
-| **01** | **Initial Setup, User Management & Secure SSH Access** | User creation (`adduser`), systemd service control (`systemctl`), network addressing (`ip addr`), host fingerprint validation, and ED25519 public-key authentication (`ssh-keygen`, `ssh-copy-id`) | Complete | [View Lab 01](./labs/01-ssh-configuration-and-remote-access/) |
-| **02** | **Static Network Configuration & Netplan Administration** | YAML-based Netplan configuration, interface bonding, DNS nameservers, gateway routing, and interface state diagnostics | Planned | *Upcoming* |
-| **03** | **Linux Security Hardening & UFW Firewall Deployment** | Uncomplicated Firewall (UFW) rulesets, SSH daemon hardening (`sshd_config`), Fail2ban brute-force protection, and audit logging | Planned | *Upcoming* |
-| **04** | **Storage Administration & Logical Volume Management (LVM)** | Physical volumes (PV), volume groups (VG), logical volumes (LV), filesystem expansion, and automated mounting via `/etc/fstab` | Planned | *Upcoming* |
-| **05** | **Containerized Workloads & Enterprise Service Orchestration** | Docker CE installation, systemd container service wrappers, Nginx reverse proxying, and automated TLS certificate issuance | Planned | *Upcoming* |
+| **01** | **Initial Setup, User Management & Secure SSH Access** | User creation (`adduser`), service management (`systemctl`), network discovery (`ip addr`), host fingerprint verification, and ED25519 key authentication (`ssh-keygen`, `ssh-copy-id`) | Complete | [View Lab 01](./labs/01-ssh-configuration-and-remote-access/) |
 
 ---
 
-## 🚀 Lab 01 Spotlight: Secure SSH & User Administration
+## 🚀 Lab 01 Summary: User Provisioning & Secure SSH Remote Access
 
-### Key Implementation Milestones
+### Implementation Steps
 
-1. **Least-Privilege User Provisioning:**
-   - Deployed dedicated administrative user `jaser` with dedicated primary group `jaser` and secure home directory permissions.
-   - Mitigated exposure of the default `root` and unmonitored baseline accounts.
+1. **User Account Provisioning:**
+   - Created dedicated user account `jaser` with primary group `jaser` and home directory `/home/jaser`.
+2. **OpenSSH Service Management:**
+   - Checked initial status (`inactive (dead)`), started the `ssh` service, and verified active state with `sshd` listening on port `22`.
+3. **Network Discovery:**
+   - Queried interface addressing using `ip addr` to identify server IP `192.168.150.134/24` on interface `ens33`.
+4. **Initial Remote Access & Host Verification:**
+   - Initiated remote connection `ssh jaser@192.168.150.134`, verified and accepted ED25519 fingerprint into `known_hosts`, authenticated, and verified identity with `whoami`.
+5. **ED25519 Cryptographic Key Generation:**
+   - Generated modern ED25519 public/private key pair on the client machine via `ssh-keygen -t ed25519`.
+6. **Public Key Deployment:**
+   - Transferred public key to the remote server using `ssh-copy-id jaser@192.168.150.134`.
+7. **Session Verification & Login Auditing:**
+   - Verified successful session establishment and inspected login audit record (`Last login: ... from 192.168.150.1`).
 
-2. **OpenSSH Server Daemon Control:**
-   - Discovered and addressed inactive state in `ssh.service`.
-   - Activated daemon listeners across both IPv4 (`0.0.0.0:22`) and IPv6 (`:::22`) under systemd socket management.
-
-3. **Remote Trust & Fingerprint Validation:**
-   - Established initial connection from Windows workstation `192.168.150.1` to target `192.168.150.134`.
-   - Validated server ED25519 host key fingerprint to protect against adversary-in-the-middle (AiTM) risks.
-
-4. **Modern Elliptic-Curve Cryptography:**
-   - Generated high-performance, side-channel-resistant **ED25519** key pairs (`ssh-keygen -t ed25519`).
-   - Automated public key injection to remote target via `ssh-copy-id`.
-
-### Quick Reference Commands
+### Commands Reference
 
 ```bash
-# User Management
+# 1. Provision user account
 sudo adduser jaser
-sudo usermod -aG sudo jaser
 
-# OpenSSH Service Management
+# 2. Check and start OpenSSH service
 sudo systemctl status ssh
 sudo systemctl start ssh
-sudo systemctl enable ssh
+sudo systemctl status ssh
 
-# Network Interface & IP Discovery
-ip addr show ens33
-ip route show
+# 3. Discover IP address
+ip addr
 
-# Client-Side Key Generation & Deployment
+# 4. Connect via SSH from client
+ssh jaser@192.168.150.134
+whoami
+
+# 5. Generate ED25519 SSH key pair (Client)
 ssh-keygen -t ed25519
-ssh-copy-id jaser@<server-ip>
 
-# Secure Connection
-ssh jaser@<server-ip>
+# 6. Deploy public key to server
+ssh-copy-id jaser@192.168.150.134
+
+# 7. Re-connect and verify session
+ssh jaser@192.168.150.134
 ```
-
----
-
-## 🛡️ Systems Hardening Reference
-
-Production environments require defense-in-depth across the remote access surface:
-
-- **Disable Root SSH Access:** Set `PermitRootLogin no` in `/etc/ssh/sshd_config`.
-- **Enforce Cryptographic Authentication:** Disable password fallbacks using `PasswordAuthentication no`.
-- **Restrict Authorized Users:** Declare explicit access with `AllowUsers <username>`.
-- **Limit Authentication Surface:** Restrict maximum authentication attempts (`MaxAuthTries 3`) and configure aggressive session timeouts.
-- **Firewall Filtering:** Confine port 22 access strictly to trusted management subnets via `ufw allow from <management-cidr> to any port 22 proto tcp`.
 
 ---
 
@@ -124,9 +108,3 @@ Production environments require defense-in-depth across the remote access surfac
 
 - **Analyst & Administrator:** **Jaser Halabi**
 - **GitHub Profile:** [@JaserHalabi](https://github.com/JaserHalabi)
-- **Specialization:** Cybersecurity, Network Engineering & Systems Infrastructure
-- **Related Portfolios:**
-  - [windows-server-labs](https://github.com/JaserHalabi/windows-server-labs) — Enterprise Windows Server 2019 Infrastructure & AD DS Hardening
-  - [soc-homelab-wazuh](https://github.com/JaserHalabi/soc-homelab-wazuh) — SOC Homelab: Wazuh SIEM Threat Detection & Active Response
-  - [Network-Analysis](https://github.com/JaserHalabi/Network-Analysis) — Traffic Capture, Protocol Analysis & Packet Filtering with Wireshark & tcpdump
-  - [networking-labs](https://github.com/JaserHalabi/networking-labs) — Cisco Enterprise Topologies & Routing Protocols (OSPF, EIGRP, RIP)
