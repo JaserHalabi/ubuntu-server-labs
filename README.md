@@ -19,40 +19,6 @@ Each lab includes step-by-step procedures, terminal commands, configuration file
 
 ---
 
-## 🏛️ Infrastructure Architecture
-
-```mermaid
-flowchart TB
-    subgraph Enterprise["🏢 Enterprise Ubuntu Server Infrastructure (server.cyber.local)"]
-        direction TB
-        Net["Static Networking (Netplan)<br/>IP: 192.168.10.10/24<br/>Gateway: 192.168.10.1<br/>Domain: cyber.local"]
-        
-        subgraph Services["Core Daemons & Protocols"]
-            SSH["OpenSSH Daemon (Port 22/TCP)<br/>ED25519 Public-Key Authentication"]
-            DNS["BIND9 DNS Server (Port 53/UDP/TCP)<br/>Forward: cyber.local<br/>Reverse: 10.168.192.in-addr.arpa"]
-            DHCP["ISC DHCP Server (Port 67/UDP)<br/>Scope: 192.168.10.100 - 192.168.10.200<br/>Options: Router, DNS, Domain Name"]
-        end
-
-        subgraph Access["Security & Access Control"]
-            Groups["Departmental Groups: networks, cybersecurity, support"]
-            Users["Provisioned Accounts: net1, sec1, sup1, jaser"]
-            Dirs["Isolated Storage: /company/{networks, cybersecurity, support}"]
-        end
-        
-        Net --> Services
-        Services --> Access
-    end
-
-    subgraph Client["🖥️ End-User Workstation (Ubuntu Desktop)"]
-        direction TB
-        C_DHCP["Dynamic Lease: 192.168.10.100/24<br/>Gateway: 192.168.10.1<br/>DNS: 192.168.10.10<br/>Search: cyber.local"]
-    end
-
-    Enterprise <-->|Automated DHCP & DNS Resolution| Client
-```
-
----
-
 ## 📑 Lab Modules Index
 
 | # | Lab Module | Key Topics & Competencies | Status | Documentation |
